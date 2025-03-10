@@ -1,0 +1,22 @@
+body{
+  height: 50vh;
+  width: 500px;
+  margin: 0px;
+  border: 0px;
+  background-color: black;
+}
+.welcome-container{
+  width:auto;
+}
+
+img{
+  margin-left: 125px; 
+}
+p{
+  font-size: 30px;
+  text-align: center;
+  width: auto;
+  color : pink;
+  font-style: italic;
+  font-weight: bold;
+}
