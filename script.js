@@ -1,8 +1,20 @@
+let startValue = 120;
+
+document.getElementById("timerInc").addEventListener("click", function(){
+    startValue+= 5;
+    document.getElementById("result").innerHTML = startValue;
+})
+
+document.getElementById("timerDec").addEventListener("click", function(){
+    startValue-= 5;
+    document.getElementById("result").innerHTML = startValue;
+})
 
 document.getElementById("startTimer").addEventListener("click", function(){
-    var timeLeft = 10;
+    let div = document.getElementById("result");
+    let timeLeft = parseInt(div.textContent);
     let time = timeLeft*60;
-    var timer = setInterval(function f1(){
+    let timer = setInterval(function f1(){
         const minutes=Math.floor(time/60);
         let seconds=time%60;
         seconds=seconds<10?'0'+seconds:seconds;
@@ -16,15 +28,5 @@ document.getElementById("startTimer").addEventListener("click", function(){
     }, 1000);
 })
 
-let startValue = 0;
 
-document.getElementById("timerInc").addEventListener("click", function(){
-    startValue+= 5;
-    document.getElementById("result").innerHTML = startValue;
-})
-
-document.getElementById("timerDec").addEventListener("click", function(){
-    startValue-= 5;
-    document.getElementById("result").innerHTML = startValue;
-})
 
