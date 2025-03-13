@@ -18,7 +18,7 @@ document.getElementById("startTimer").addEventListener("click", function(){
         const minutes=Math.floor(time/60);
         let seconds=time%60;
         seconds=seconds<10?'0'+seconds:seconds;
-        document.getElementById("countdown").innerHTML = minutes+":"+seconds;
+        document.getElementById("result").innerHTML = minutes+":"+seconds;
         time -= 1;
 
         if (time <= 0){
