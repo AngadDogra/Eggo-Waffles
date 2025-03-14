@@ -1,12 +1,16 @@
-let startValue = 120;
+let startValue = 0;
 
 document.getElementById("timerInc").addEventListener("click", function(){
-    startValue+= 5;
+     if (startValue<120) {
+        startValue+= 5;
+      }
     document.getElementById("result").innerHTML = startValue;
 })
 
 document.getElementById("timerDec").addEventListener("click", function(){
-    startValue-= 5;
+    if (startValue>0) {
+        startValue-= 5;
+      }
     document.getElementById("result").innerHTML = startValue;
 })
 
