@@ -7,7 +7,7 @@
         "default_popup" : "index.html",
         "default_icon" : "logo-removebg.png"
     },
-    "host_permissions": [
-        "https://*"
-    ]
+    "background" : {
+        "scripts" : ["background.js"]
+    }
 }
