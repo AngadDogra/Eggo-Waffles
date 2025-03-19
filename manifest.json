@@ -5,7 +5,7 @@
     "manifest_version" : 3,
     "action" : {
         "default_popup" : "index.html",
-        "default_icon" : "logo-removebg.png"
+        "default_icon" : "assets/logo-removebg.png"
     },
     "host_permissions": [
         "https://*"
