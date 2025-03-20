@@ -139,20 +139,20 @@ function startCountdown(time) {
 
         document.getElementById("result").innerHTML = minutes + ":" + seconds;
 
-        if (remainingTime > time * 0.90) {
+        if (remainingTime > startValue * 60* 0.90) {
             document.getElementById("quotes").innerHTML = fac_quotes[0];
-            document.getElementById("eggz").src = imgs[1];
-        }else if (remainingTime > time * 0.80) {
+            document.getElementById("eggz").src = imgs[0];
+        }else if (remainingTime > startValue * 60* 0.80) {
             document.getElementById("quotes").innerHTML = fac_quotes[1];
-        } else if (remainingTime > time * 0.70) {
+        } else if (remainingTime > startValue * 60 * 0.70) {
             document.getElementById("quotes").innerHTML = fac_quotes[2];
-        } else if (remainingTime > time * 0.60) {
+        } else if (remainingTime > startValue * 60 * 0.60) {
             document.getElementById("quotes").innerHTML = fac_quotes[3];
-        } else if (remainingTime > time * 0.50) {
+        } else if (remainingTime > startValue * 60 * 0.50) {
             document.getElementById("quotes").innerHTML = fac_quotes[4];
-        } else if (remainingTime > time * 0.40) {
+        } else if (remainingTime > startValue * 60 * 0.40) {
             document.getElementById("quotes").innerHTML = fac_quotes[5];
-        } else if (remainingTime > time * 0.30) {
+        } else if (remainingTime > startValue * 60* 0.30) {
             document.getElementById("quotes").innerHTML = fac_quotes[6];
         } else if (remainingTime > 0) {
             document.getElementById("quotes").innerHTML = fac_quotes[7];
@@ -165,7 +165,8 @@ function startCountdown(time) {
             document.getElementById("quotes").style.display = "none";
             document.getElementById("result").style.display = "none";
             document.getElementById("eggz").src = imgs[1]; // Cracked Egg
-
+            document.getElementById("startTimer").innerHTML = "Start";
+     
             // Show the buttons back after time is up
             setTimeout(() => {
                 document.getElementById("timerInc").style.display = "inline-block";
