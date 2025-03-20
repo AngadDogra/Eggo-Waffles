@@ -107,7 +107,7 @@ function updateTimerUI(value) {
 // Increase Timer
 document.getElementById("timerInc").addEventListener("click", function () {
     if (startValue < 120) {
-        startValue += 1;
+        startValue += 5;
     }
     updateTimerUI(startValue);
 });
@@ -115,7 +115,7 @@ document.getElementById("timerInc").addEventListener("click", function () {
 // Decrease Timer
 document.getElementById("timerDec").addEventListener("click", function () {
     if (startValue > 5) {
-        startValue -= 1;
+        startValue -= 5;
     }
     updateTimerUI(startValue);
 });
