@@ -139,9 +139,9 @@ function startCountdown(time) {
 
         document.getElementById("result").innerHTML = minutes + ":" + seconds;
 
+        //this is for changing quotes at different time intervals
         if (remainingTime > startValue * 60* 0.90) {
             document.getElementById("quotes").innerHTML = fac_quotes[0];
-            document.getElementById("eggz").src = imgs[0];
         }else if (remainingTime > startValue * 60* 0.80) {
             document.getElementById("quotes").innerHTML = fac_quotes[1];
         } else if (remainingTime > startValue * 60 * 0.70) {
@@ -158,6 +158,7 @@ function startCountdown(time) {
             document.getElementById("quotes").innerHTML = fac_quotes[7];
         }
 
+        //this is for what will be shown once timer is up for 3000seconds
         if (remainingTime <= 0) {
             clearInterval(timer);
             localStorage.removeItem("endTime");
@@ -167,7 +168,7 @@ function startCountdown(time) {
             document.getElementById("eggz").src = imgs[1]; // Cracked Egg
             document.getElementById("startTimer").innerHTML = "Start";
      
-            // Show the buttons back after time is up
+            // Show the buttons again after time is up
             setTimeout(() => {
                 document.getElementById("timerInc").style.display = "inline-block";
                 document.getElementById("timerDec").style.display = "inline-block";
@@ -178,7 +179,8 @@ function startCountdown(time) {
                 document.getElementById("eggz").src = imgs[0]; // Reset to whole egg
             }, 3000);
         }
-    }, 100000000000000000000000);
+    }, 100000000000000000000000); //this reduced the latency
+
 }
 
 // Start Timer
@@ -199,3 +201,16 @@ window.onload = function () {
         }
     }
 };
+
+
+document.getElementById("toggleMusic").addEventListener("click", function () {
+    let bgMusic = document.getElementById("bgMusic");
+
+    if (bgMusic.paused) {
+        bgMusic.play();
+        this.textContent = "Pause Music";
+    } else {
+        bgMusic.pause();
+        this.textContent = "Play Music";
+    }
+});
