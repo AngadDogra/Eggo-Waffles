@@ -1,11 +1,26 @@
-/* #dictionary-popup {
-    background-color: #fd7777;
-    border: 1px solid black;
-    padding: 8px;
-    font-size: 14px;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+#dictionary-popup {
+    all: unset;
     position: absolute;
-    z-index: 9999;
-    border-radius: 5px;
-    max-width: 250px;
-} */
+    background-color: #fd7777 !important; /* Pomodoro Red */
+    color: white !important;
+    border: 2px solid black !important;
+    padding: 12px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    max-width: 300px;
+    z-index: 99999;
+    text-align: left;
+    white-space: normal;
+    line-height: 1.5;
+    font-weight: bold;
+    display: inline-block;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    pointer-events: none;
+}
+
+.dictionary-popup-visible {
+    opacity: 1 !important;
+}
