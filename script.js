@@ -46,7 +46,7 @@ document.getElementById("timerDec").addEventListener("click", function () {
 });
 
 // Start Timer Function
-function startCountdown(time) {
+function startCountdown(time) { 
     let endTime = Date.now() + time * 1000;
     localStorage.setItem("endTime", endTime);
 
@@ -85,6 +85,16 @@ function startCountdown(time) {
             document.getElementById("quotes").innerHTML = fac_quotes[7];
         }
 
+        // **Egg shaking and sound effect at 7 seconds left**
+        if (remainingTime === 7) {
+            const eggElement = document.getElementById("eggz");
+            eggElement.classList.add("shake"); // Apply shaking animation
+
+            // Play hatching sound
+            const hatchAudio = new Audio("assets/egg_hatch_audio.mp3");
+            hatchAudio.play();
+        }
+
         // Timer reaches 0
         if (remainingTime <= 0) {
             clearInterval(timer);
@@ -94,8 +104,16 @@ function startCountdown(time) {
             document.getElementById("startTimer").style.display = "none";
             document.getElementById("quotes").style.display = "none";
             document.getElementById("result").style.display = "none";
-            document.getElementById("eggz").src = imgs[1]; // Cracked Egg
+
+            // **Egg cracks**
+            document.getElementById("eggz").src = imgs[1];
+
+            // **Stop shaking**
+            document.getElementById("eggz").classList.remove("shake");
+
             document.getElementById("startTimer").innerHTML = "Start";
+
+            chrome.tabs.create({ url: chrome.runtime.getURL("main_page.html") });
 
             setTimeout(() => {
                 document.getElementById("timerInc").style.display = "inline-block";
@@ -104,11 +122,14 @@ function startCountdown(time) {
                 document.getElementById("quotes").style.display = "block";
                 document.getElementById("result").style.display = "block";
                 document.getElementById("quotes").innerHTML = "Increase your <br> Productivity!";
-                document.getElementById("eggz").src = imgs[0]; // Reset to whole egg
+
+                // **Reset egg to whole**
+                document.getElementById("eggz").src = imgs[0];
             }, 3000);
         }
     }, 1000);
 }
+
 
 // Start/Pause Timer
 document.getElementById("startTimer").addEventListener("click", function () {

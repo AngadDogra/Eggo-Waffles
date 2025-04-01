@@ -68,6 +68,19 @@ p{
   font-weight: 500;
 }
 
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px) rotate(-2deg); }
+  50% { transform: translateX(5px) rotate(2deg); }
+  75% { transform: translateX(-5px) rotate(-2deg); }
+  100% { transform: translateX(0); }
+}
+
+.shake {
+  animation: shake 0.3s ease-in-out infinite;
+}
+
+
 /*
 <button class="button-55" role="button">Button 55</button>
 */
