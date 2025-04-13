@@ -98,7 +98,7 @@ function showPopup(word, meaning, phonetic, synonyms, audio, mouseX, mouseY) {
         ${phonetic ? `<div style="color:#aaa; font-size:14px;">/${phonetic}/</div>` : ""}
         <div style="margin-top:8px;">${meaning}</div>
         ${synonyms.length ? `<div style="margin-top:6px;"><strong>Synonyms:</strong> ${synonyms.slice(0, 5).join(', ')}</div>` : ""}
-        ${audio ? `<button id="play-audio" style="margin-top:8px; padding:6px 10px; font-size:14px;">🔊 Play</button>` : ""}
+        ${audio ? `<button id="play-audio" style="margin-top:8px; padding:6px 10px; font-size:14px;">🔊</button>` : ""}
     `;
 
     Object.assign(popup.style, {

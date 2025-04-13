@@ -1,0 +1,113 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  /* Body Styling */
+  body {
+    background-color: #ffffff;
+    color: #111111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 30px 15px;
+  }
+  
+  /* Main Container */
+  .container {
+    background: #fff;
+    border: 2px solid #111;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 100%;
+    padding: 40px;
+    text-align: center;
+  }
+  
+  /* Heading */
+  .container h1 {
+    font-size: 2rem;
+    color: #fd7777;
+    margin-bottom: 20px;
+  }
+  
+  /* Pomodoro Count Display */
+  #ppomodoroCountDisplay {
+    font-weight: bold;
+    font-size: 1.4rem;
+    color: #111;
+  }
+  
+  /* Button Styling */
+  button {
+    background-color: #fd7777;
+    color: #ffffff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  button:hover {
+    background-color: #b71c1c;
+    transform: scale(1.05);
+  }
+  
+  /* Timer Status Text */
+  #timer-status {
+    margin-top: 15px;
+    font-size: 1.1rem;
+    color: #666666;
+  }
+  
+  /* Info Section */
+  .info-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+  }
+  
+  .info-section h2 {
+    font-size: 1.5rem;
+    color: #fd7777;
+    margin-bottom: 10px;
+  }
+  
+  .info-section p {
+    font-size: 1rem;
+    color: #333333;
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+  
+  .features-section {
+    margin-top: 40px;
+    text-align: left;
+  }
+  
+  .features-section h2 {
+    font-size: 1.5rem;
+    color: #fd7777;
+    margin-bottom: 15px;
+  }
+  
+  .features-section ul {
+    list-style-type: disc;
+    padding-left: 20px;
+  }
+  
+  .features-section li {
+    font-size: 1rem;
+    color: #222;
+    margin-bottom: 10px;
+    line-height: 1.6;
+  }
+  

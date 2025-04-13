@@ -101,6 +101,10 @@ function startCountdown(time) {
             localStorage.removeItem("endTime");
             localStorage.removeItem("remainingTime");
 
+            let completedCount = parseInt(localStorage.getItem("pomodoroCount") || "0", 10);
+            localStorage.setItem("pomodoroCount", completedCount + 1);
+        
+
             document.getElementById("startTimer").style.display = "none";
             document.getElementById("quotes").style.display = "none";
             document.getElementById("result").style.display = "none";

@@ -392,3 +392,7 @@ document.addEventListener("DOMContentLoaded", function() {
     confetti.resize();
   });
 });
+
+setTimeout(() => {
+  window.location.href = "dashboard.html";
+}, 4000); 
