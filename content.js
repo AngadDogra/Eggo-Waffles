@@ -56,11 +56,11 @@
 
 document.addEventListener("mouseup", (event) => {
     setTimeout(async () => {
-        const selectedText = window.getSelection().toString().trim();
-        if (!selectedText) return;
-
-        // Clear the selection to prevent visual bugs
-        window.getSelection().removeAllRanges();
+        const selection = window.getSelection();
+        const selectedText = selection.toString().trim();
+        
+        // Only proceed if exactly one word is selected (no whitespace or multiple words)
+        if (!selectedText || /\s/.test(selectedText)) return;
 
         const apiUrl = `https://api.dictionaryapi.dev/api/v2/entries/en/${selectedText}`;
 
@@ -69,7 +69,6 @@ document.addEventListener("mouseup", (event) => {
             if (!response.ok) throw new Error("No definition found.");
 
             const data = await response.json();
-
             const meaning = data[0]?.meanings[0]?.definitions[0]?.definition || "No definition available.";
             const phonetic = data[0]?.phonetic || data[0]?.phonetics[0]?.text || "";
             const synonyms = data[0]?.meanings[0]?.definitions[0]?.synonyms || [];
@@ -79,8 +78,10 @@ document.addEventListener("mouseup", (event) => {
         } catch (error) {
             console.error("Dictionary API error:", error);
         }
-    }, 150); // Slight delay to avoid accidental trigger
+    }, 150);
 });
+
+// (Keep the existing showPopup() function unchanged)
 
 function showPopup(word, meaning, phonetic, synonyms, audio, mouseX, mouseY) {
     // Remove existing popup
