@@ -5,19 +5,19 @@
     "manifest_version" : 3,
     "web_accessible_resources": [
         {
-            "resources": ["main_page.html", "main_page.js"],
+            "resources": ["frontend/main_page.html", "frontend/main_page.js"],
             "matches": ["<all_urls>"]
         }
     ],
     "action" : {
-        "default_popup" : "index.html",
+        "default_popup" : "frontend/index.html",
         "default_icon" : "assets/logo-removebg.png"
     },
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
-            "js": ["content.js"],
-            "css": ["content.css"]
+            "js": ["frontend/content.js"],
+            "css": ["frontend/content.css"]
         }
     ],
     "permissions": ["activeTab", "tabs"]
