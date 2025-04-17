@@ -396,3 +396,7 @@ document.addEventListener("DOMContentLoaded", function() {
 setTimeout(() => {
   window.location.href = "dashboard.html";
 }, 4000); 
+
+
+
+
