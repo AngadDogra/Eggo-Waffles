@@ -15,19 +15,43 @@
     <button id="start-timer">Start Pomodoro</button>
     <p id="timer-status">Not running</p>
 
-    <!-- NEW SIGNUP FORM SECTION -->
-    <div class="signup-section">
-      <h2>Save Your Progress</h2>
-      <form id="signup-form" class="signup-form">
-        <div class="form-group">
-          <input type="text" id="username" placeholder="Username" required>
-        </div>
-        <div class="form-group">
-          <input type="password" id="password" placeholder="Password" required>
-        </div>
-        <button type="submit" class="signup-button">Create Account</button>
-      </form>
-      <p class="login-prompt">Already have an account? <a href="#" id="login-toggle">Log in</a></p>
+    <!-- UPDATED AUTH SECTION -->
+    <div id="auth-section" class="signup-section">
+      <!-- Logged-in View (hidden by default) -->
+      <div id="logged-in-view" style="display:none;">
+        <h2>Welcome back, <span id="logged-in-username"></span>!</h2>
+        <button id="logout-btn" class="signup-button">Log Out</button>
+      </div>
+
+      <!-- Login Form -->
+      <div id="login-form">
+        <h2>Save Your Progress</h2>
+        <form class="signup-form">
+          <div class="form-group">
+            <input type="text" id="login-username" placeholder="Username" required>
+          </div>
+          <div class="form-group">
+            <input type="password" id="login-password" placeholder="Password" required>
+          </div>
+          <button type="button" id="login-btn" class="signup-button">Log In</button>
+          <p class="login-prompt">New user? <a href="#" id="show-signup">Create account</a></p>
+        </form>
+      </div>
+
+      <!-- Signup Form (hidden by default) -->
+      <div id="signup-form" style="display:none;">
+        <h2>Create Account</h2>
+        <form class="signup-form">
+          <div class="form-group">
+            <input type="text" id="signup-username" placeholder="Username" required>
+          </div>
+          <div class="form-group">
+            <input type="password" id="signup-password" placeholder="Password" required>
+          </div>
+          <button type="button" id="signup-btn" class="signup-button">Sign Up</button>
+          <p class="login-prompt">Already have an account? <a href="#" id="show-login">Log in</a></p>
+        </form>
+      </div>
     </div>
 
     <div class="info-section">
@@ -49,6 +73,9 @@
     </div>
   </div>
 
+  <!-- Include auth dependencies -->
+  <script src="auth.js"></script>
+  <script src="auth-ui.js"></script>
   <script src="dashboard.js"></script>
 </body>
 </html>
