@@ -9,6 +9,10 @@ from dotenv import load_dotenv
 
 class Config:
     load_dotenv()
+    SECRET_KEY = os.getenv("SECRET_KEY")
+    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
+    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres.enjxhfxgblspbocvlnpw:agrima@aws-0-ap-south-1.pooler.supabase.com:5432/postgres'
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 db = SQLAlchemy()
 jwt = JWTManager()
