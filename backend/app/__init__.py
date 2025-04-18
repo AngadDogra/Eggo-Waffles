@@ -1,25 +1,38 @@
 # app/__init__.py
-
+import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
-import os
+from authlib.integrations.flask_client import OAuth
+from dotenv import load_dotenv
+
 
 class Config:
-    SECRET_KEY=os.environ.get('843a7b16123097c0cdcbf6e720f93cd0d481aa160102a1bd0f2764de9987afb1')
-    JWT_SECRET_KEY = os.environ.get('5524d8fdeae1c02d81dbec3f7deac2e641e8f8622214a04401cacde1e5aaa49e') or 'dev_key_here'
-    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:agrima@db.enjxhfxgblspbocvlnpw.supabase.co:5432/postgres'
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    load_dotenv()
 
 db = SQLAlchemy()
 jwt = JWTManager()
+oauth = OAuth()
 
 def create_app():
-    app = Flask(__name__)
+    template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../frontend'))
+    app = Flask(__name__, template_folder=template_dir, static_folder=template_dir)
     app.config.from_object(Config)
 
     db.init_app(app)
     jwt.init_app(app)
+    oauth.init_app(app)
+
+    oauth.register(
+        name='google',
+        client_id=os.getenv("GOOGLE_CLIENT_ID"),
+        client_secret=os.getenv("GOOGLE_CLIENT_SECRET"),
+        server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
+        client_kwargs={
+            'scope': 'openid email profile'
+        },
+        redirect_url='http://127.0.0.1:5000/auth/google/callback'
+    )
 
     from app.routes import main
     app.register_blueprint(main)

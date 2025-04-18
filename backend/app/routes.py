@@ -1,87 +1,45 @@
-# app/routes.py
-
-from flask import Blueprint, request, jsonify
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
-from datetime import datetime
-from .models import User, Pomodoro
-
-main = Blueprint('main', __name__) 
-
-users = []
-
-@main.route('/register', methods=['POST'])
-def register():
-    data = request.get_json()
-    username = data.get('username')
-    password = data.get('password')
-
-    if any(user.username == username for user in users):
-        return jsonify({'msg': 'Username already taken'}), 400
-
-    new_user = User(username=username, password=password)
-    users.append(new_user)
-    return jsonify({'msg': 'User registered successfully'}), 201
-
-@main.route('/login', methods=['POST'])
-def login():
-    data = request.get_json()
-    username = data.get('username')
-    password = data.get('password')
-
-    user = next((user for user in users if user.username == username), None)
-
-    if user and user.check_password(password):
-        access_token = create_access_token(identity=username)
-        return jsonify({'access_token': access_token}), 200
-
-    return jsonify({'msg': 'Invalid credentials'}), 401
-
-@main.route('/pomodoro', methods=['POST'])
-@jwt_required()
-def save_pomodoro():
-    current_user = get_jwt_identity()
-    data = request.get_json()
-    duration = data.get('duration')
-
-    if duration:
-        new_pomodoro = Pomodoro(duration=duration, completed_at=datetime.now())
-        user = next(user for user in users if user.username == current_user)
-        user.pomodoros.append(new_pomodoro)
-        return jsonify({'msg': 'Pomodoro session saved successfully'}), 200
-
-    return jsonify({'msg': 'Duration is required'}), 400
-
-@main.route('/pomodoros', methods=['GET'])
-@jwt_required()
-def get_pomodoros():
-    current_user = get_jwt_identity()
-    user = next(user for user in users if user.username == current_user)
-
-    pomodoro_data = [{
-        'id': pomodoro.id,
-        'duration': pomodoro.duration,
-        'completed_at': pomodoro.completed_at.strftime('%Y-%m-%d %H:%M:%S')
-    } for pomodoro in user.pomodoros]
-
-    return jsonify(pomodoro_data), 200
-
-@main.route('/')
-def hello():
-    return "Hello from backend!"
+from flask import Blueprint, redirect, url_for, session, request, current_app
+from app import oauth
+from flask import render_template
 
 
-# -------------------------------------------------------
+main = Blueprint('main', __name__)
 
-from app import db
+@main.route('/login/google')
+def login_with_google():
+    redirect_uri = url_for('main.google_callback', _external=True)
+    print("Redirect URI being sent:", redirect_uri)
+    return oauth.google.authorize_redirect(redirect_uri)
 
-from sqlalchemy import text 
+@main.route('/auth/google/callback')
+def google_callback():
+    token = oauth.google.authorize_access_token()
+    user_info = oauth.google.userinfo() 
+    session['user'] = user_info
+    return render_template('dashboard.html', user=user_info)
 
-# Test route to check database connection
-@main.route('/test-db', methods=['GET'])
-def test_db_connection():
-    try:
-        # Wrap the SQL expression in text() to make it valid for SQLAlchemy
-        db.session.execute(text('SELECT 1'))
-        return jsonify({"msg": "Database connection is successful!"}), 200
-    except Exception as e:
-        return jsonify({"msg": f"Database connection failed: {str(e)}"}), 500
+# @main.route('/login/google')
+# def login_with_google():
+#     redirect_uri = url_for('main.google_callback', _external=True)
+#     next_url = request.args.get('next', '')
+#     return oauth.google.authorize_redirect(redirect_uri + f'?next={next_url}')
+
+
+# @main.route('/auth/google/callback')
+# def google_callback():
+#     token = oauth.google.authorize_access_token()
+#     user_info = oauth.google.userinfo()
+#     session['user'] = user_info
+
+#     # Redirect to 'next' if exists
+#     next_url = request.args.get('next')
+#     return redirect(next_url or url_for('main.settings'))
+
+
+# @main.route('/settings')
+# def settings():
+#     if 'user' not in session:
+#         return redirect(url_for('main.login_with_google', next=request.path))
+    
+#     user = session['user']
+#     return render_template('dashboard.html', user=user)
