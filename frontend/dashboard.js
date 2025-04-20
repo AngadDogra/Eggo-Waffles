@@ -8,6 +8,9 @@ window.onload = function () {
     }
 
     const token = localStorage.getItem('jwt_token');
+
+    // 
+    removeLogin();
     if (!token) {
         alert('You must be logged in to view your Pomodoros.');
         return;
@@ -87,4 +90,21 @@ function logPomodoro(pomodoros, sessionName) {
     .catch((error) => {
         console.error('Error:', error);
     });
+}
+
+// this jazz is some cool jazz
+function logout(){
+    localStorage.removeItem("jwt_token");
+    window.location.href="/frontend/dashboard.html";
+}
+
+
+// this is some more cool jazz hehe hi agrima :)
+function removeLogin() {
+    const token = localStorage.getItem("jwt_token");
+    const loginBtn = document.getElementById("loginBtn");
+
+    if (token && loginBtn) {
+        loginBtn.style.display = "none";
+    }
 }

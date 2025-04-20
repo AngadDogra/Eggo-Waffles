@@ -5,7 +5,7 @@ from app.models import User, PomodoroSession
 from app import db
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask import jsonify
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token 
 from flask import session, redirect, url_for
 import jwt
 import datetime
@@ -14,9 +14,12 @@ main = Blueprint('main', __name__)
 
 @main.route('/login/google')
 def login_with_google():
+
     redirect_uri = url_for('main.google_callback', _external=True)
     print("Redirect URI being sent:", redirect_uri)
     return oauth.google.authorize_redirect(redirect_uri)
+    
+
 
 @main.route('/auth/google/callback')
 def google_callback():
@@ -98,19 +101,3 @@ def get_history():
     })
 
 
-@main.route('/logout')
-def logout():
-    return jsonify({"message": "You can safely clear your token now."})
-
-@main.route("/user/me", methods=["GET"])
-@jwt_required()
-def user_profile():
-    current_user = get_jwt_identity()
-    user = User.query.filter_by(email=current_user).first()
-    if not user:
-     return jsonify({"error": "User not found"}), 404
-
-    return jsonify({
-    "name": user.username,
-    "email": user.email,
-})
