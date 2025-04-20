@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -15,16 +15,16 @@
     <button id="start-timer">Start Pomodoro</button>
     <p id="timer-status">Not running</p>
 
-    <!-- UPDATED AUTH SECTION -->
+    UPDATED AUTH SECTION
     <div id="auth-section" class="signup-section">
-      <!-- Logged-in View (hidden by default) -->
+      Logged-in View (hidden by default) 
       <div id="logged-in-view" style="display:none;">
         <h2>Welcome back, <span id="logged-in-username"></span>!</h2>
         <button id="logout-btn" class="signup-button">Log Out</button>
       </div>
       
 
-      <!-- Login Form -->
+      Login Form
       <div id="login-form">
         <h2>Save Your Progress</h2>
         <form class="signup-form">
@@ -39,7 +39,7 @@
         </form>
       </div>
 
-      <!-- Signup Form (hidden by default) -->
+      Signup Form (hidden by default)
       <div id="signup-form" style="display:none;">
         <h2>Create Account</h2>
         <form class="signup-form">
@@ -74,9 +74,56 @@
     </div>
   </div>
 
-  <!-- Include auth dependencies -->
+  Include auth dependencies
   <script src="auth.js"></script>
   <script src="auth-ui.js"></script>
   <script src="dashboard.js"></script>
 </body>
-</html>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pomodoro Dashboard</title>
+  <link rel="stylesheet" href="../frontend/dashboard.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Pomodoro Tracker 🧠</h1>
+
+    <!-- Show Pomodoro Count from Server -->
+    <p>Pomodoros Completed: <span id="pomodoroCountDisplay">Loading...</span></p>
+
+    <button id="start-timer">Start Pomodoro</button>
+    <p id="timer-status">Not running</p>
+
+    <!-- Logged-in Google User Info -->
+    <div id="google-auth-info">
+      <h2>Welcome, <span id="user-name">Loading...</span>!</h2>
+      <p id="user-email">Loading...</p>
+      <a href="/logout"><button>Logout</button></a>
+    </div>
+
+    <div class="info-section">
+      <h2>What is a Pomodoro Timer?</h2>
+      <p>
+        The Pomodoro Technique is a time management method that breaks work into focused intervals, traditionally 25 minutes long, separated by short breaks.
+        Each interval is called a <strong>“Pomodoro”</strong>. After 4 Pomodoros, you take a longer break.
+      </p>
+    </div>
+
+    <div class="features-section">
+      <h2>What We Provide</h2>
+      <ul>
+        <li><strong>Flexible Timer:</strong> Choose your focus duration anywhere from <span style="color:#e63946;">5 to 120 minutes</span> based on your needs.</li>
+        <li><strong>Unstoppable Focus:</strong> Once the Pomodoro starts, it can only be <em>paused</em>—no giving up midway!</li>
+        <li><strong>Visual Reward:</strong> At the end of each Pomodoro, <span style="color:#e63946;">an egg cracks</span>—a quirky, satisfying reward for your effort.</li>
+        <li><strong>Collect the Egg:</strong> Keep track of your productivity with our fun egg-collecting system!</li>
+        <li><strong>Built-in Dictionary:</strong> Highlight any word on the page, and its meaning will instantly appear—boost your vocabulary while staying focused.</li>
+      </ul>
+    </div>
+    <script src="../frontend/dashboard.js"></script>
+  </div>

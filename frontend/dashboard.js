@@ -1,56 +1,88 @@
 window.onload = function () {
-    let count = localStorage.getItem("pomodoroCount") || 0;
-    document.getElementById("ppomodoroCountDisplay").innerText = `Pomodoros Completed: ${count}`;
+    const urlParams = new URLSearchParams(window.location.search);
+    const tokenFromURL = urlParams.get('token');
+    if (tokenFromURL) {
+        localStorage.setItem('jwt_token', tokenFromURL);
+        // Optional: Clear the token from URL
+        window.history.replaceState({}, document.title, "/frontend/dashboard.html");
+    }
+
+    const token = localStorage.getItem('jwt_token');
+    if (!token) {
+        alert('You must be logged in to view your Pomodoros.');
+        return;
+    }
+
+    getPomodoroHistory(token);    // ← Get Pomodoro stats
 };
 
-// login function to call the backend API
-function login(username, password) {
-    fetch('http://localhost:5000/login', {
-        method: 'POST',
+
+// Function to fetch and display Pomodoro history
+function getPomodoroHistory(token) {
+    fetch('http://localhost:5000/pomodoro/history', {
+        method: 'GET',
         headers: {
-            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({
-            username: username,
-            password: password,
-        }),
     })
     .then((response) => response.json())
     .then((data) => {
-        if (data.access_token) {
-            localStorage.setItem('jwt_token', data.access_token);  // Store JWT token
-            alert('Login successful!');
-        } else {
-            alert('Invalid credentials');
+        if (data.error) {
+            alert('Error fetching Pomodoro data: ' + data.error);
+            return;
         }
+
+        // 👇 Set user info
+        document.getElementById('user-name').innerText = data.user_name;
+        document.getElementById('user-email').innerText = data.user_email;
+
+        // Set pomodoro count
+        document.getElementById('pomodoroCountDisplay').innerText = `Pomodoros Completed: ${data.total_completed}`;
+
+        // Render history
+        const pomodoroList = document.getElementById('pomodoroList');
+        pomodoroList.innerHTML = '';  // Clear previous data
+
+        data.history.forEach((session) => {
+            const pomodoroItem = document.createElement('li');
+            pomodoroItem.textContent = `Session: ${session.session_name}, Pomodoros: ${session.pomodoros}, Completed at: ${new Date(session.timestamp).toLocaleString()}`;
+            pomodoroList.appendChild(pomodoroItem);
+        });
     })
     .catch((error) => {
         console.error('Error:', error);
     });
 }
 
-function getPomodoros() {
-    const token = localStorage.getItem('jwt_token');  // Get JWT token from localStorage
+
+// Function to log a Pomodoro session (from your frontend)
+function logPomodoro(pomodoros, sessionName) {
+    const token = localStorage.getItem('jwt_token');
     if (!token) {
-        alert('You must be logged in to view your Pomodoros.');
+        alert('You must be logged in to log Pomodoros.');
         return;
     }
 
-    fetch('http://localhost:5000/pomodoros', {
-        method: 'GET',
+    fetch('http://localhost:5000/pomodoro/log', {
+        method: 'POST',
         headers: {
-            'Authorization': `Bearer ${token}`,  // Add JWT token to request headers
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
         },
+        body: JSON.stringify({
+            pomodoros: pomodoros,
+            session_name: sessionName,
+        }),
     })
     .then((response) => response.json())
     .then((data) => {
-        const pomodoroList = document.getElementById('pomodoroList');  // Assume you have a div with this ID
-        pomodoroList.innerHTML = '';  // Clear previous sessions
-        data.forEach((pomodoro) => {
-            const pomodoroItem = document.createElement('li');
-            pomodoroItem.textContent = `Pomodoro ${pomodoro.id}: ${pomodoro.duration} minutes, completed at ${new Date(pomodoro.completed_at).toLocaleString()}`;
-            pomodoroList.appendChild(pomodoroItem);
-        });
+        if (data.error) {
+            alert('Error logging Pomodoro: ' + data.error);
+            return;
+        }
+
+        alert('Pomodoro logged successfully!');
+        getPomodoroHistory(token); // Refresh history after logging a Pomodoro
     })
     .catch((error) => {
         console.error('Error:', error);

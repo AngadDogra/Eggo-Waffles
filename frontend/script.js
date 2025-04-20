@@ -15,6 +15,7 @@ let startValue = Number(localStorage.getItem("startValue")) || 5; // Default 5 m
 let isPaused = localStorage.getItem("isPaused") === "true"; // Retrieve pause state
 let remainingTime = parseInt(localStorage.getItem("remainingTime"), 10) || startValue * 60;
 let timer = null;
+let token = localStorage.getItem('jwt_token');
 
 function updateTimerUI(time) {
     let minutes = Math.floor(time / 60); //converts seconds to minutes
@@ -201,3 +202,34 @@ document.getElementById("toggleMusic").addEventListener("click", function () {
         this.textContent = "Play Music";
     }
 });
+
+
+// ----for updating pomos and send to backend-------------
+
+function updatePomodoroCount(count) {
+    let token = localStorage.getItem('jwt_token');  // Get the stored token
+  
+    if (token) {
+      fetch('http://localhost:5000/update_pomodoros', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`  // Send the token in Authorization header
+        },
+        body: JSON.stringify({
+          completed_count: count
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Pomodoro count updated:', data);
+      })
+      .catch(error => {
+        console.error('Error updating Pomodoro count:', error);
+      });
+    }
+  }
+  
+
+
+  
