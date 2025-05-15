@@ -1,15 +1,25 @@
 const fac_quotes = [
-    "Good Start! Make this session a success!",
-    "In the Chinese creation myth, the universe began as a vast, formless egg containing chaos, a mix of yin and yang",
-    "Pangu, a giant, emerged from this cosmic egg, symbolizing the separation of chaos into order.",
-    "Pangu separated the sky (yang) from the earth (yin), creating the world as we know it.",
-    "After Pangu's death, his body parts became various parts of the world, such as mountains, rivers, stars, and the sun and moon",
-    "You are so close! Keep Going!",
-    "You are 70% done!",
-    "You are almost done! We are so proud!"
+    // "Good Start! Make this session a success!",
+    // "In the Chinese creation myth, the universe began as a vast, formless egg containing chaos, a mix of yin and yang",
+    // "Pangu, a giant, emerged from this cosmic egg, symbolizing the separation of chaos into order.",
+    // "Pangu separated the sky (yang) from the earth (yin), creating the world as we know it.",
+    // "After Pangu's death, his body parts became various parts of the world, such as mountains, rivers, stars, and the sun and moon",
+    // "You are so close! Keep Going!",
+    // "You are 70% done!",
+    // "You are almost done! We are so proud!"
+    "Lets this waffle jazz sorted",
+    "A bit sunny, init?",
+    "Wot?",
+    "To egg or not to egg",
+    "HONEY DRIZZLE",
+    "almost there m8",
+    "good job m8, you're productive, well done"
 ];
 
-const imgs = ["assets/egg.png", "assets/cracked.png"];
+const imgs = ["../assets/egg-crack-waffle.jpeg", "../assets/swish.jpeg",
+              "../assets/sprinkle.jpeg", "../assets/swish.jpeg",
+              "../assets/honey.jpeg", "../assets/wait.png",
+              "../assets/final-waffle.jpeg"];
 
 let startValue = Number(localStorage.getItem("startValue")) || 5; // Default 5 minutes
 let isPaused = localStorage.getItem("isPaused") === "true"; // Retrieve pause state
@@ -46,8 +56,10 @@ document.getElementById("timerDec").addEventListener("click", function () {
     }
 });
 
+var back_img = document.getElementById("eggz");
+
 // Start Timer Function
-function startCountdown(time) { 
+function startCountdown(time) {
     let endTime = Date.now() + time * 1000;
     localStorage.setItem("endTime", endTime);
 
@@ -68,22 +80,38 @@ function startCountdown(time) {
         localStorage.setItem("remainingTime", remainingTime);
 
         // Update motivational quotes
-        if (remainingTime > startValue * 60 * 0.90) {
+        if (remainingTime > startValue * 60 * (6/7)) {
             document.getElementById("quotes").innerHTML = fac_quotes[0];
-        } else if (remainingTime > startValue * 60 * 0.80) {
+            back_img.src = imgs[0];
+        } else if (remainingTime > startValue * 60 * (5/7)) {
             document.getElementById("quotes").innerHTML = fac_quotes[1];
-        } else if (remainingTime > startValue * 60 * 0.70) {
+            back_img.src = imgs[1];
+        } else if (remainingTime > startValue * 60 * (4/7)) {
             document.getElementById("quotes").innerHTML = fac_quotes[2];
-        } else if (remainingTime > startValue * 60 * 0.60) {
+            back_img.src = imgs[2];
+        } else if (remainingTime > startValue * 60 * (3/7)) {
             document.getElementById("quotes").innerHTML = fac_quotes[3];
-        } else if (remainingTime > startValue * 60 * 0.50) {
+            back_img.src = imgs[3];
+        } else if (remainingTime > startValue * 60 * (2/7)) {
             document.getElementById("quotes").innerHTML = fac_quotes[4];
-        } else if (remainingTime > startValue * 60 * 0.40) {
+            back_img.src = imgs[4];
+        }// } else if (remainingTime > startValue * 60 * 0.40) {
+        //     document.getElementById("quotes").innerHTML = fac_quotes[5];
+        //     back_img.src = imgs[5];
+        // } else if (remainingTime > startValue * 60 * 0.30) {
+        //     document.getElementById("quotes").innerHTML = fac_quotes[5];
+        // } else if (remainingTime > 0) {
+        else if (remainingTime > startValue * 60 * (1/7)) {
             document.getElementById("quotes").innerHTML = fac_quotes[5];
-        } else if (remainingTime > startValue * 60 * 0.30) {
-            document.getElementById("quotes").innerHTML = fac_quotes[6];
-        } else if (remainingTime > 0) {
-            document.getElementById("quotes").innerHTML = fac_quotes[7];
+            back_img.src = imgs[5];
+        }
+        else if (remainingTime > 0){
+            document.getElementById("quotes").innerHTML = fac_quotes[5];
+            back_img.src = imgs[5];
+        }
+        else{
+          document.getElementById("quotes").innerHTML = fac_quotes[6];
+          back_img.src = imgs[5];
         }
 
         // **Egg shaking and sound effect at 7 seconds left**
@@ -104,7 +132,7 @@ function startCountdown(time) {
 
             let completedCount = parseInt(localStorage.getItem("pomodoroCount") || "0", 10);
             localStorage.setItem("pomodoroCount", completedCount + 1);
-        
+
 
             document.getElementById("startTimer").style.display = "none";
             document.getElementById("quotes").style.display = "none";
@@ -141,7 +169,7 @@ document.getElementById("startTimer").addEventListener("click", function () {
     isPaused = !isPaused;
     localStorage.setItem("isPaused", isPaused);
     localStorage.setItem("remainingTime", remainingTime);
-    
+
     this.innerHTML = isPaused ? "Resume" : "Pause";
 
     if (!isPaused) {
@@ -208,7 +236,7 @@ document.getElementById("toggleMusic").addEventListener("click", function () {
 
 function updatePomodoroCount(count) {
     let token = localStorage.getItem('jwt_token');  // Get the stored token
-  
+
     if (token) {
       fetch('http://localhost:5000/update_pomodoros', {
         method: 'POST',
@@ -229,7 +257,3 @@ function updatePomodoroCount(count) {
       });
     }
   }
-  
-
-
-  
