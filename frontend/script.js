@@ -146,7 +146,7 @@ function startCountdown(time) {
 
             document.getElementById("startTimer").innerHTML = "Start";
 
-            chrome.tabs.create({ url: chrome.runtime.getURL("main_page.html") });
+            chrome.tabs.create({ url: chrome.runtime.getURL("frontend/main_page.html") });
 
             setTimeout(() => {
                 document.getElementById("timerInc").style.display = "inline-block";
@@ -257,3 +257,5 @@ function updatePomodoroCount(count) {
       });
     }
   }
+
+//new
