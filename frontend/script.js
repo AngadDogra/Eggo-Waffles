@@ -1,13 +1,5 @@
 const fac_quotes = [
-    // "Good Start! Make this session a success!",
-    // "In the Chinese creation myth, the universe began as a vast, formless egg containing chaos, a mix of yin and yang",
-    // "Pangu, a giant, emerged from this cosmic egg, symbolizing the separation of chaos into order.",
-    // "Pangu separated the sky (yang) from the earth (yin), creating the world as we know it.",
-    // "After Pangu's death, his body parts became various parts of the world, such as mountains, rivers, stars, and the sun and moon",
-    // "You are so close! Keep Going!",
-    // "You are 70% done!",
-    // "You are almost done! We are so proud!"
-    "Lets this waffle jazz sorted",
+    "Lets get this waffle jazz sorted",
     "A bit sunny, init?",
     "Wot?",
     "To egg or not to egg",
@@ -17,7 +9,7 @@ const fac_quotes = [
 ];
 
 const imgs = ["../assets/egg-crack-waffle.jpeg", "../assets/swish.jpeg",
-              "../assets/sprinkle.jpeg", "../assets/swish.jpeg",
+              "../assets/sprinkle.jpeg", "../assets/stage-4.png",
               "../assets/honey.jpeg", "../assets/wait.png",
               "../assets/final-waffle.jpeg"];
 
@@ -34,6 +26,11 @@ function updateTimerUI(time) {
     document.getElementById("result").innerHTML = minutes + ":" + seconds;
 }
 
+document.getElementById("openDashboard").addEventListener("click", function () {
+    chrome.tabs.create({ url: chrome.runtime.getURL("frontend/dashboard.html") });
+  });
+
+  
 // Increase Timer
 document.getElementById("timerInc").addEventListener("click", function () {
     if (startValue < 120) {
@@ -65,7 +62,7 @@ function startCountdown(time) {
 
     document.getElementById("timerInc").style.display = "none";
     document.getElementById("timerDec").style.display = "none";
-    document.getElementById("startTimer").innerHTML = "Pause";
+    document.getElementById("startTimer").innerHTML = '<i class="fa-solid fa-pause"></i>';
 
     if (timer) clearInterval(timer);
 
@@ -95,12 +92,7 @@ function startCountdown(time) {
         } else if (remainingTime > startValue * 60 * (2/7)) {
             document.getElementById("quotes").innerHTML = fac_quotes[4];
             back_img.src = imgs[4];
-        }// } else if (remainingTime > startValue * 60 * 0.40) {
-        //     document.getElementById("quotes").innerHTML = fac_quotes[5];
-        //     back_img.src = imgs[5];
-        // } else if (remainingTime > startValue * 60 * 0.30) {
-        //     document.getElementById("quotes").innerHTML = fac_quotes[5];
-        // } else if (remainingTime > 0) {
+        }
         else if (remainingTime > startValue * 60 * (1/7)) {
             document.getElementById("quotes").innerHTML = fac_quotes[5];
             back_img.src = imgs[5];
@@ -170,7 +162,7 @@ document.getElementById("startTimer").addEventListener("click", function () {
     localStorage.setItem("isPaused", isPaused);
     localStorage.setItem("remainingTime", remainingTime);
 
-    this.innerHTML = isPaused ? "Resume" : "Pause";
+    this.innerHTML = isPaused ? '<i class="fa-solid fa-play"></i>' : '<i class="fa-solid fa-pause"></i>';
 
     if (!isPaused) {
         clearInterval(timer); // Clear any existing interval
@@ -201,7 +193,7 @@ window.onload = function () {
 
     if (storedPaused) {
         isPaused = true;
-        document.getElementById("startTimer").innerHTML = "Resume";
+        document.getElementById("startTimer").innerHTML = '<i class="fa-solid fa-play"></i>';
     }
 
     if (endTime) {
@@ -258,4 +250,3 @@ function updatePomodoroCount(count) {
     }
   }
 
-//new

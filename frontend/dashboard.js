@@ -108,3 +108,26 @@ function removeLogin() {
         loginBtn.style.display = "none";
     }
 }
+
+function showSection(sectionId) {
+    // Hide all content sections
+    const sections = document.querySelectorAll('.tab-content');
+    sections.forEach(section => {
+      section.style.display = 'none';
+    });
+  
+    // Show the selected section
+    document.getElementById(sectionId).style.display = 'block';
+  
+    // Update active sidebar item
+    const sidebarItems = document.querySelectorAll('.sidebar li');
+    sidebarItems.forEach(item => item.classList.remove('active'));
+  
+    // Add active class to clicked item
+    const clickedItem = Array.from(sidebarItems).find(li => {
+      return li.querySelector('a').getAttribute('onclick').includes(sectionId);
+    });
+    if (clickedItem) clickedItem.classList.add('active');
+  }
+  
+  

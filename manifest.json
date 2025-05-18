@@ -5,7 +5,9 @@
     "manifest_version" : 3,
     "web_accessible_resources": [
         {
-            "resources": ["frontend/main_page.html", "frontend/main_page.js"],
+            "resources": ["frontend/main_page.html", "frontend/main_page.js",
+            "assets/fonts/webfonts/*",
+            "assets/fonts/css/*"],
             "matches": ["<all_urls>"]
         }
     ],

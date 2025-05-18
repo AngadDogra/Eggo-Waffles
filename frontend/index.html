@@ -2,31 +2,33 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="../frontend/style.css">
+    <link rel="stylesheet" href="../assets/fonts/css/all.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka&family=Inter&display=swap" rel="stylesheet">
+
 </head>
 <body>
-    <div class="title" id="quotes">
-      Fancy a Waffle?
-    </div>
+  <div class="settings" id="openDashboard">
+    <i class="fa-solid fa-gear"></i>
+  </div>  
+  <div class="title" id="quotes">
+    Fancy a Waffle?
+  </div>
 
-    <img id="eggz" class = "initialEgg" width = "170px" height = "170px" src = "../assets/final-waffle.jpeg">
+
+    <img id="eggz" class = "initialEgg" width = "190px" height = "190px" src = "../assets/final-waffle.jpeg">
+
+    <div class="timerWrap">
+    <div class = "timerDec" id = "timerDec"><i class="fa-solid fa-angle-left"></i></div>
+    <div class="result" id="result">5:00</div>
+    <div class = "timerInc" id = "timerInc"><i class="fa-solid fa-angle-right"></i></div>
+    </div>
 
     <div class = "welcome-container">
       <button class="button-55" id="startTimer">
-       Click to crack the egg!
+       Let's Waffle!
       </button>
     </div>
 
-    <!-- bg music -->
-   <!-- <audio id="bgMusic" loop>
-      <source src="assets/Far From Any Road.mp3" type="audio/mpeg">
-  </audio> -->
-  <!-- <button id="toggleMusic">Play/Pause Music</button> new -->
-
-    <div class="timerWrap">
-    <div class = "timerDec" id = "timerDec"> 	&#x2B05;</div>
-    <div class="result" id="result">5:00</div>
-    <div class = "timerInc" id = "timerInc">	&#x27A1;</div>
-    </div>
 
 
   <script src = "../frontend/script.js"></script>
