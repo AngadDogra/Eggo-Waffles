@@ -22,7 +22,7 @@ window.onload = function () {
 
 // Function to fetch and display Pomodoro history
 function getPomodoroHistory(token) {
-    fetch('http://localhost:5000/pomodoro/history', {
+    fetch('http://127.0.0.1:5000/pomodoro/history', {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -66,11 +66,13 @@ function logPomodoro(pomodoros, sessionName) {
         return;
     }
 
-    fetch('http://localhost:5000/pomodoro/log', {
+      
+    fetch('http://127.0.0.1:5000/pomodoro/log', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
+            
         },
         body: JSON.stringify({
             pomodoros: pomodoros,
@@ -110,24 +112,38 @@ function removeLogin() {
 }
 
 function showSection(sectionId) {
-    // Hide all content sections
+    // Hide all sections
     const sections = document.querySelectorAll('.tab-content');
-    sections.forEach(section => {
-      section.style.display = 'none';
-    });
+    sections.forEach(section => section.style.display = 'none');
   
-    // Show the selected section
-    document.getElementById(sectionId).style.display = 'block';
-  
-    // Update active sidebar item
+    // Remove active class from all sidebar items
     const sidebarItems = document.querySelectorAll('.sidebar li');
     sidebarItems.forEach(item => item.classList.remove('active'));
   
-    // Add active class to clicked item
-    const clickedItem = Array.from(sidebarItems).find(li => {
-      return li.querySelector('a').getAttribute('onclick').includes(sectionId);
+    // Show the selected section
+    const activeSection = document.getElementById(sectionId);
+    if (activeSection) {
+      activeSection.style.display = 'block';
+    }
+  
+    // Set active sidebar link
+    const links = document.querySelectorAll('.sidebar a');
+    links.forEach(link => {
+      if (link.getAttribute('onclick')?.includes(sectionId)) {
+        link.parentElement.classList.add('active');
+      }
     });
-    if (clickedItem) clickedItem.classList.add('active');
   }
   
+  window.onload = () => {
+    showSection('home-section');
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
+    if (token) {
+      localStorage.setItem('jwt_token', token);
+      // Optionally remove token from URL for clean UI
+      window.history.replaceState({}, document.title, "/dashboard.html");
+    }
+  };
   
+

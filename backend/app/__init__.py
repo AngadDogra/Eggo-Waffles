@@ -22,7 +22,10 @@ migrate = Migrate()
 
 def create_app():
     template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../frontend'))
+    assets_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../assets'))
+
     app = Flask(__name__, template_folder=template_dir, static_folder=template_dir)
+
     app.config.from_object(Config)
     CORS(app)
 
@@ -45,6 +48,14 @@ def create_app():
         userinfo_endpoint='https://www.googleapis.com/oauth2/v1/userinfo', 
     )
 
+
+    from flask import send_from_directory
+    
+    @app.route('/assets/<path:filename>')
+    def assets(filename):
+        return send_from_directory(assets_dir, filename)
+
+    # Register blueprints, etc.
     from app.routes import main
     app.register_blueprint(main)
 

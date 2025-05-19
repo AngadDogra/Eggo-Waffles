@@ -101,3 +101,21 @@ def get_history():
     })
 
 
+
+
+@main.route('/update_pomodoros', methods=['POST'])
+@jwt_required()
+def update_pomodoros():
+    data = request.get_json()
+    count = data.get('completed_count')
+
+    user_email = get_jwt_identity()
+    user = User.query.filter_by(email=user_email).first()
+
+    if not user:
+        return jsonify({'message': 'User not found'}), 404
+
+    user.pomodoros_completed = count
+    db.session.commit()
+
+    return jsonify({'message': 'Pomodoro count updated', 'pomodoros_completed': user.pomodoros_completed}), 200

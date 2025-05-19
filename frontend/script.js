@@ -112,7 +112,7 @@ function startCountdown(time) {
             eggElement.classList.add("shake"); // Apply shaking animation
 
             // Play hatching sound
-            const hatchAudio = new Audio("assets/egg_hatch_audio.mp3");
+            const hatchAudio = new Audio("../assets/egg_hatch_audio.mp3");
             hatchAudio.play();
         }
 
@@ -122,8 +122,9 @@ function startCountdown(time) {
             localStorage.removeItem("endTime");
             localStorage.removeItem("remainingTime");
 
-            let completedCount = parseInt(localStorage.getItem("pomodoroCount") || "0", 10);
-            localStorage.setItem("pomodoroCount", completedCount + 1);
+            let completedCount = parseInt(localStorage.getItem("pomodoroCount") || "0", 10) + 1;
+            localStorage.setItem("pomodoroCount", completedCount);
+            updatePomodoroCount(completedCount);
 
 
             document.getElementById("startTimer").style.display = "none";
@@ -230,7 +231,7 @@ function updatePomodoroCount(count) {
     let token = localStorage.getItem('jwt_token');  // Get the stored token
 
     if (token) {
-      fetch('http://localhost:5000/update_pomodoros', {
+      fetch('http://127.0.0.1:5000/update_pomodoros', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
