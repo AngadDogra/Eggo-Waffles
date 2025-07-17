@@ -3,3 +3,4 @@ Werkzeug==2.2.3
 Flask-JWT-Extended==4.3.1
 Authlib>=1.0.0
 gunicorn
+flask_sqlalchemy
