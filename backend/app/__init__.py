@@ -44,7 +44,7 @@ def create_app():
         client_kwargs={
             'scope': 'openid email profile'
         },
-        redirect_url='http://127.0.0.1:5000/auth/google/callback',
+        redirect_url='https://eggo-waffles-8nnd.onrender.com/auth/google/callback',
         userinfo_endpoint='https://www.googleapis.com/oauth2/v1/userinfo', 
     )
 
