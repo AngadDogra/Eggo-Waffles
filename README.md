@@ -2,13 +2,23 @@
 A minimal and delightful Chrome Extension to help you stay productive — because productive people get the nice egg waffles 🍳✨
 
 <p align="center">
-  <img src="assets/Timer-View.png" height="200px"/>
+  <img src="assets/Timer-View.png" height="350px"/>
 </p>
+
+---
 
 # Features
 Pomodoro Timer. 
 Very cool interface.
 Potential Google Login.
+
+---
+
+<p align="center">
+  <img src="assets/Dashboard-View.png"/>
+</p>
+
+--- 
 
 # Installation Steps
 Fork this repository 
