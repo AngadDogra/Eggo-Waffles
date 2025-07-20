@@ -2,7 +2,7 @@
 A minimal and delightful Chrome Extension to help you stay productive — because productive people get the nice egg waffles 🍳✨
 
 <p align="center">
-  <img src="assets/Timer-View.png"/>
+  <img src="assets/Timer-View.png" height="200px"/>
 </p>
 
 # Features
