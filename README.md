@@ -1,6 +1,8 @@
 # 🧇 Eggo Waffles
 A minimal and delightful Chrome Extension to help you stay productive — because productive people get the nice egg waffles 🍳✨
 
+![Timer-View](assets/Timer-View.png)
+
 # Features
 Pomodoro Timer. 
 Very cool interface.
