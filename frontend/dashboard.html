@@ -65,7 +65,7 @@
         <script src="../frontend/dashboard.js"></script>
       </div>
       </body> -->
-
+<!-- 
       <!DOCTYPE html>
       <html lang="en">
       <head>
@@ -74,6 +74,8 @@
         <title>Pomodoro Dashboard</title>
         <link rel="stylesheet" href="../frontend/dashboard.css" />
         <link href="https://fonts.googleapis.com/css2?family=Fredoka&display=swap" rel="stylesheet" />
+        <script src="https://unpkg.com/@supabase/supabase-js"></script>
+        <script src="./dashboard.js"></script>
       </head>
       <body>
         <div class="container">
@@ -98,8 +100,7 @@
                 <div id="google-auth-info">
                   <h2>Welcome, <span id="user-name">Loading...</span>!</h2>
                   <p id="user-email">Loading...</p>
-                  <!-- loginBtn should NOT have onclick removeLogin because removeLogin hides it when logged in -->
-                  <a href="http://127.0.0.1:5000/login/google"><button id="loginBtn">Login</button></a>
+                  <button id="loginBtn" onclick="signInWithGoogle()">Login with Google</button>
                   <button onclick="logout()">Logout</button>
                 </div>
               </div>
@@ -107,7 +108,6 @@
               <div id="progress-section" class="tab-content" style="display:none;">
                 <h2>Your Progress</h2>
                 <p>Track how many Pomodoros you've completed here!</p>
-                <!-- Add progress visualizations later -->
               </div>
       
               <div id="about-section" class="tab-content" style="display:none;">
@@ -132,7 +132,6 @@
           </div>
         </div>
       
-        <!-- Put your script at the end so DOM is ready -->
         <script src="../frontend/dashboard.js"></script>
         <script>
           // Run on page load
@@ -172,4 +171,83 @@
         </script>
       </body>
       </html>
-      
+       -->
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pomodoro Dashboard</title>
+
+  <!-- If this font causes CSP/style issues, bundle locally later -->
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../frontend/dashboard.css" />
+  <!-- Load local Supabase SDK (MV3-safe) -->
+  <script src="../frontend/lib/supabase.js"></script>
+  <!-- Load your app script once -->
+  <script src="../frontend/dashboard.js"></script>
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <h1>Eggo Waffles</h1>
+      <img src="../assets/stage-6.png" width="190" height="190" class="waffle" alt="Waffle Image" />
+      <ul id="sidebar-links">
+        <li><a href="#" data-section="home-section">Home</a></li>
+        <li><a href="#" data-section="progress-section">Progress</a></li>
+        <li><a href="#" data-section="about-section">About Eggo Waffles</a></li>
+        <li><a href="#" data-section="settings-section">Settings</a></li>
+      </ul>
+    </aside>
+
+    <div class="two">
+      <div class="main-content">
+        <div id="home-section" class="tab-content">
+          <h1>Pomodoro Tracker</h1>
+          <p>Pomodoros Completed: <span id="pomodoroCountDisplay">Loading...</span></p>
+          <button id="start-timer">Start Pomodoro</button>
+          <p id="timer-status">Not running</p>
+
+          <div id="google-auth-info">
+            <h2>Welcome, <span id="user-name">Loading...</span>!</h2>
+            <p id="user-email">Loading...</p>
+            <button id="loginBtn">Login with Google</button>
+            <button id="logoutBtn">Logout</button>
+          </div>
+
+          <!-- Optional: show history list if you want -->
+          <ul id="pomodoroList"></ul>
+        </div>
+
+        <div id="progress-section" class="tab-content" style="display:none;">
+          <h2>Your Progress</h2>
+          <p>Track how many Pomodoros you've completed here!</p>
+        </div>
+
+        <div id="about-section" class="tab-content" style="display:none;">
+          <h2>About Eggo Waffles</h2>
+          <div class="features-section">
+            <h2>What We Provide</h2>
+            <ul>
+              <li><strong>Flexible Timer:</strong> Choose your focus duration anywhere from <span style="color:#e63946;">5 to 120 minutes</span>.</li>
+              <li><strong>Unstoppable Focus:</strong> Once the Pomodoro starts, it can only be <em>paused</em>.</li>
+              <li><strong>Visual Reward:</strong> At the end of each Pomodoro, <span style="color:#e63946;">an egg cracks</span>.</li>
+              <li><strong>Collect the Egg:</strong> Track productivity with our egg system!</li>
+              <li><strong>Built-in Dictionary:</strong> Highlight any word to see its meaning.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="settings-section" class="tab-content" style="display:none;">
+          <h2>Settings</h2>
+          <p>Customize your Pomodoro experience here.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,149 +1,223 @@
-window.onload = function () {
-    const urlParams = new URLSearchParams(window.location.search);
-    const tokenFromURL = urlParams.get('token');
-    if (tokenFromURL) {
-        localStorage.setItem('jwt_token', tokenFromURL);
-        // Optional: Clear the token from URL
-        window.history.replaceState({}, document.title, "/frontend/dashboard.html");
+// dashboard.js
+
+// ---------- Supabase client setup ----------
+const SUPABASE_URL = "https://enjxhfxgblspbocvlnpw.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVuanhoZnhnYmxzcGJvY3ZsbnB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2MzgxOTYsImV4cCI6MjA2MDIxNDE5Nn0.tM-auX85l4q5PW5EptdBTeapATzokVOhPpcb07CE3xg";
+
+// `supabase` global comes from ../frontend/lib/supabase.js (UMD build)
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Helper: extension-safe redirect URL for OAuth
+function getRedirectURL() {
+  try {
+    if (typeof chrome !== "undefined" && chrome.runtime?.id) {
+      // Redirect back to this dashboard page inside the extension
+      return `chrome-extension://${chrome.runtime.id}/frontend/dashboard.html`;
     }
+  } catch (_) {}
+  // Fallback for web testing
+  return window.location.origin + window.location.pathname;
+}
 
-    const token = localStorage.getItem('jwt_token');
+// ---------- Auth ----------
+async function signInWithGoogle() {
+    const redirectUrl = await new Promise((resolve, reject) => {
+        chrome.identity.launchWebAuthFlow(
+            {
+                url: "https://enjxhfxgblspbocvlnpw.supabase.co/auth/v1/authorize?provider=google&redirect_to=" + encodeURIComponent(chrome.identity.getRedirectURL()),
+                interactive: true
+            },
+            (redirectUrl) => {
+                if (chrome.runtime.lastError || !redirectUrl) {
+                    reject(chrome.runtime.lastError);
+                } else {
+                    resolve(redirectUrl);
+                }
+            }
+        );
+    });
 
-    // 
-    removeLogin();
-    if (!token) {
-        alert('You must be logged in to view your Pomodoros.');
-        return;
-    }
+    // Extract the access token
+    const params = new URLSearchParams(redirectUrl.split('#')[1]);
+    const accessToken = params.get('access_token');
+    const refreshToken = params.get('refresh_token') || '';
 
-    getPomodoroHistory(token);    // ← Get Pomodoro stats
-};
+    if (accessToken) {
+        localStorage.setItem('jwt_token', accessToken);
 
-
-// Function to fetch and display Pomodoro history
-function getPomodoroHistory(token) {
-    fetch('http://127.0.0.1:5000/pomodoro/history', {
-        method: 'GET',
-        headers: {
-            'Authorization': `Bearer ${token}`,
-        },
-    })
-    .then((response) => response.json())
-    .then((data) => {
-        if (data.error) {
-            alert('Error fetching Pomodoro data: ' + data.error);
-            return;
-        }
-
-        // 👇 Set user info
-        document.getElementById('user-name').innerText = data.user_name;
-        document.getElementById('user-email').innerText = data.user_email;
-
-        // Set pomodoro count
-        document.getElementById('pomodoroCountDisplay').innerText = `Pomodoros Completed: ${data.total_completed}`;
-
-        // Render history
-        const pomodoroList = document.getElementById('pomodoroList');
-        pomodoroList.innerHTML = '';  // Clear previous data
-
-        data.history.forEach((session) => {
-            const pomodoroItem = document.createElement('li');
-            pomodoroItem.textContent = `Session: ${session.session_name}, Pomodoros: ${session.pomodoros}, Completed at: ${new Date(session.timestamp).toLocaleString()}`;
-            pomodoroList.appendChild(pomodoroItem);
+        // Now you can safely await here
+        await supabaseClient.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken
         });
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-    });
+
+        window.location.href = chrome.runtime.getURL('frontend/dashboard.html');
+    }    
 }
 
 
-// Function to log a Pomodoro session (from your frontend)
-function logPomodoro(pomodoros, sessionName) {
-    const token = localStorage.getItem('jwt_token');
-    if (!token) {
-        alert('You must be logged in to log Pomodoros.');
-        return;
-    }
-
-      
-    fetch('http://127.0.0.1:5000/pomodoro/log', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-            
-        },
-        body: JSON.stringify({
-            pomodoros: pomodoros,
-            session_name: sessionName,
-        }),
-    })
-    .then((response) => response.json())
-    .then((data) => {
-        if (data.error) {
-            alert('Error logging Pomodoro: ' + data.error);
-            return;
-        }
-
-        alert('Pomodoro logged successfully!');
-        getPomodoroHistory(token); // Refresh history after logging a Pomodoro
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-    });
+async function logout() {
+  await supabaseClient.auth.signOut();
+  localStorage.removeItem("jwt_token");
+  // Reload the dashboard to reset UI state
+  window.location.href = chrome.runtime.getURL("frontend/dashboard.html");
 }
 
-// this jazz is some cool jazz
-function logout(){
+// Keep localStorage token in sync (optional, not strictly needed if you always use supabaseClient)
+supabaseClient.auth.onAuthStateChange((event, session) => {
+  if (session?.access_token) {
+    localStorage.setItem("jwt_token", session.access_token);
+  } else {
     localStorage.removeItem("jwt_token");
-    window.location.href="/frontend/dashboard.html";
+  }
+});
+
+// ---------- Data ----------
+async function getPomodoroHistory() {
+  const { data: userData } = await supabaseClient.auth.getUser();
+  const user = userData?.user;
+  if (!user) {
+    alert("You must be logged in to view your Pomodoros.");
+    setUserUI(null);
+    setPomodoroList([]);
+    return;
+  }
+
+  const { data, error } = await supabaseClient
+    .from("pomodoros")
+    .select("*")
+    .eq("user_id", user.id)
+    .order("timestamp", { ascending: false });
+
+  if (error) {
+    console.error("Fetch error:", error);
+    alert("Error fetching Pomodoro data.");
+    return;
+  }
+
+  setUserUI(user);
+  setPomodoroList(data || []);
 }
 
+async function logPomodoro(pomodoros, sessionName) {
+  const { data: userData } = await supabaseClient.auth.getUser();
+  const user = userData?.user;
+  if (!user) {
+    alert("You must be logged in to log Pomodoros.");
+    return;
+  }
 
-// this is some more cool jazz hehe hi agrima :)
-function removeLogin() {
-    const token = localStorage.getItem("jwt_token");
-    const loginBtn = document.getElementById("loginBtn");
+  const { error } = await supabaseClient
+    .from("pomodoros")
+    .insert([{
+      user_id: user.id,
+      session_name: sessionName,
+      pomodoros: pomodoros,
+      timestamp: new Date().toISOString()
+    }]);
 
-    if (token && loginBtn) {
-        loginBtn.style.display = "none";
-    }
+  if (error) {
+    console.error("Insert error:", error);
+    alert("Error logging Pomodoro.");
+    return;
+  }
+
+  alert("Pomodoro logged successfully!");
+  getPomodoroHistory();
+}
+
+// ---------- UI helpers ----------
+function setUserUI(user) {
+  const nameEl = document.getElementById("user-name");
+  const emailEl = document.getElementById("user-email");
+  if (!user) {
+    if (nameEl) nameEl.textContent = "Guest";
+    if (emailEl) emailEl.textContent = "";
+    const countEl = document.getElementById("pomodoroCountDisplay");
+    if (countEl) countEl.textContent = "0";
+    return;
+  }
+  if (nameEl) nameEl.textContent = user.user_metadata?.full_name || "User";
+  if (emailEl) emailEl.textContent = user.email || "";
+}
+
+function setPomodoroList(rows) {
+  const countEl = document.getElementById("pomodoroCountDisplay");
+  const listEl = document.getElementById("pomodoroList");
+  if (countEl) countEl.textContent = `Pomodoros Completed: ${rows.length}`;
+  if (!listEl) return;
+
+  listEl.innerHTML = "";
+  rows.forEach((session) => {
+    const li = document.createElement("li");
+    li.textContent = `Session: ${session.session_name}, Pomodoros: ${session.pomodoros}, Completed at: ${new Date(session.timestamp).toLocaleString()}`;
+    listEl.appendChild(li);
+  });
 }
 
 function showSection(sectionId) {
-    // Hide all sections
-    const sections = document.querySelectorAll('.tab-content');
-    sections.forEach(section => section.style.display = 'none');
-  
-    // Remove active class from all sidebar items
-    const sidebarItems = document.querySelectorAll('.sidebar li');
-    sidebarItems.forEach(item => item.classList.remove('active'));
-  
-    // Show the selected section
-    const activeSection = document.getElementById(sectionId);
-    if (activeSection) {
-      activeSection.style.display = 'block';
+  const sections = document.querySelectorAll(".tab-content");
+  sections.forEach((s) => (s.style.display = "none"));
+
+  const active = document.getElementById(sectionId);
+  if (active) active.style.display = "block";
+
+  const items = document.querySelectorAll(".sidebar li");
+  items.forEach((li) => li.classList.remove("active"));
+
+  const links = document.querySelectorAll('#sidebar-links a');
+  links.forEach((a) => {
+    if (a.dataset.section === sectionId) {
+      a.parentElement.classList.add("active");
     }
-  
-    // Set active sidebar link
-    const links = document.querySelectorAll('.sidebar a');
-    links.forEach(link => {
-      if (link.getAttribute('onclick')?.includes(sectionId)) {
-        link.parentElement.classList.add('active');
-      }
+  });
+}
+
+// ---------- DOM Ready ----------
+document.addEventListener("DOMContentLoaded", async () => {
+  // Wire sidebar links (no inline JS)
+  const links = document.querySelectorAll('#sidebar-links a[data-section]');
+  links.forEach((a) => {
+    a.addEventListener("click", (e) => {
+      e.preventDefault();
+      const section = a.dataset.section;
+      showSection(section);
+    });
+  });
+
+  // Default section
+  showSection("home-section");
+
+  // Wire buttons
+  const loginBtn = document.getElementById("loginBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
+  const startBtn = document.getElementById("start-timer");
+
+  if (loginBtn) loginBtn.addEventListener("click", signInWithGoogle);
+  if (logoutBtn) logoutBtn.addEventListener("click", logout);
+  if (startBtn) {
+    startBtn.addEventListener("click", () => {
+      alert("Starting Pomodoro timer... (implement timer logic here)");
+      // Example: when a pomodoro completes, call:
+      // logPomodoro(1, "Focused Session");
     });
   }
-  
-  window.onload = () => {
-    showSection('home-section');
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get('token');
-    if (token) {
-      localStorage.setItem('jwt_token', token);
-      // Optionally remove token from URL for clean UI
-      window.history.replaceState({}, document.title, "/dashboard.html");
-    }
-  };
-  
 
+  // If token came via URL (e.g., testing web flow)
+  const urlParams = new URLSearchParams(window.location.search);
+  const tokenFromURL = urlParams.get("token");
+  if (tokenFromURL) {
+    localStorage.setItem("jwt_token", tokenFromURL);
+    window.history.replaceState({}, document.title, "/frontend/dashboard.html");
+  }
+
+  // If already logged in, render history
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (session) {
+    setUserUI(session.user);
+    getPomodoroHistory();
+  } else {
+    setUserUI(null);
+    setPomodoroList([]);
+  }
+});

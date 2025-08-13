@@ -223,31 +223,3 @@ document.getElementById("toggleMusic").addEventListener("click", function () {
         this.textContent = "Play Music";
     }
 });
-
-
-// ----for updating pomos and send to backend-------------
-
-function updatePomodoroCount(count) {
-    let token = localStorage.getItem('jwt_token');  // Get the stored token
-
-    if (token) {
-      fetch('http://127.0.0.1:5000/update_pomodoros', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`  // Send the token in Authorization header
-        },
-        body: JSON.stringify({
-          completed_count: count
-        })
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Pomodoro count updated:', data);
-      })
-      .catch(error => {
-        console.error('Error updating Pomodoro count:', error);
-      });
-    }
-  }
-
