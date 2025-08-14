@@ -19,7 +19,7 @@ function getRedirectURL() {
   return window.location.origin + window.location.pathname;
 }
 
-// ---------- Auth ----------
+// ---------- Auth ---------- 
 async function signInWithGoogle() {
     const redirectUrl = await new Promise((resolve, reject) => {
         chrome.identity.launchWebAuthFlow(
